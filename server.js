@@ -41,33 +41,21 @@ app.post('/shorten', (req, res) =>
         {
             link = results.rows[0].shortlink;
             link = req.headers.origin + '/' + link;
-            console.log(results.rows[0].shortlink);
             res.redirect('/');
         }
         else
         {
-            console.log("I am here in shorten else condition");
             link = generateshortlink();
-            console.log("Generated shortlink:", link);
-            console.log("Original URL:", url);
             const insertQuery = `INSERT INTO urltable (url, shortlink) VALUES ($1, $2)`;
             const values = [url, link];
-            console.log("Executing INSERT query:", insertQuery);
-            console.log("With values:", values);
             connection.query(insertQuery, values, function (err, results) {
                 if (err) {
-                    console.error("Error during INSERT query execution:", err);
                     res.status(500).send('Database query failed');
                     return;
                 }
-                console.log("I am here inside else condition");
-                console.log("RESULTS:", results);
-
                 link = req.headers.origin + '/' + link;
-                console.log("Redirecting to:", link);
                 res.redirect('/');
             });
-            console.log("here outside");
         }
     });
 });
@@ -75,7 +63,6 @@ app.post('/shorten', (req, res) =>
 app.get('/:s', (req, res) => 
 {
     const shortlink = req.params.s;
-    console.log(shortlink);
     connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [shortlink], function (err, results, fields) {
         console.log(results);
         if (results.rowCount > 0) 
