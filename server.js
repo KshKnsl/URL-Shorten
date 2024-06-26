@@ -54,17 +54,17 @@ app.post('/shorten', (req, res) =>
     });
 });
 
-// app.get('/:s', (req, res) => 
-// {
-//     const shortLink = req.params.s;
-//     connection.query(`SELECT url FROM URLTABLE WHERE shortLink = '${shortLink}'`, function (err, results, fields) {
-//         if (results.length > 0) 
-//         {
-//             const url = results[0].url;
-//             res.redirect(url);
-//         } 
-//         else  res.sendStatus(404);
-//     });
-// });
+app.get('/:s', (req, res) => 
+{
+    const shortLink = req.params.s;
+    connection.query(`SELECT url FROM URLTABLE WHERE shortLink = '${shortLink}'`, function (err, results, fields) {
+        if (results.length > 0) 
+        {
+            const url = results[0].url;
+            res.redirect(url);
+        } 
+        else  res.sendStatus(404);
+    });
+});
 
 app.listen(process.env.PORT, () => { console.log('Server is running...') });
