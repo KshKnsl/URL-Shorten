@@ -19,23 +19,23 @@ app.get('/', (req, res) =>
 
 const randomString = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890@#$%^&*()_"
 
-function generateShortLink() 
+function generateshortlink() 
 {
-    let shortLink = '';
+    let shortlink = '';
     for (let i = 0; i < 3; i++) 
     {
         const randomIndex = Math.floor(Math.random() * randomString.length);
-        shortLink += randomString[randomIndex];
+        shortlink += randomString[randomIndex];
     }
-    connection.query(`SELECT url FROM URLTABLE WHERE shortLink = $1`, [shortLink], function (err, results, fields) {if (results.rowCount <= 0)    return generateShortLink();
+    connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [shortlink], function (err, results, fields) {if (results.rowCount <= 0)    return generateshortlink();
     });
-    return shortLink;    
+    return shortlink;    
 }
 app.post('/shorten', (req, res) => 
 {
     url  = req.body.url;
     if(!url || url.trim() =='')            res.redirect('/');
-    connection.query(`SELECT shortLink FROM URLTABLE WHERE url = $1`, [url], function (err, results) 
+    connection.query(`SELECT shortlink FROM URLTABLE WHERE url = $1`, [url], function (err, results) 
     {
         if(results.rowCount > 0) 
         {
@@ -47,8 +47,8 @@ app.post('/shorten', (req, res) =>
         else
         {
             console.log("I am here in shorten else condition");
-            link = generateShortLink();
-            connection.query(`INSERT INTO URLTABLE (url, shortLink) VALUES ($1, $2)`, [url, link]);
+            link = generateshortlink();
+            connection.query(`INSERT INTO URLTABLE (url, shortlink) VALUES ($1, $2)`, [url, link]);
             link = req.headers.origin + '/' + link;
             res.redirect('/');
         }
@@ -57,9 +57,9 @@ app.post('/shorten', (req, res) =>
 
 app.get('/:s', (req, res) => 
 {
-    const shortLink = req.params.s;
-    console.log(shortLink);
-    connection.query(`SELECT url FROM URLTABLE WHERE shortLink = $1`, [shortLink], function (err, results, fields) {
+    const shortlink = req.params.s;
+    console.log(shortlink);
+    connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [shortlink], function (err, results, fields) {
         console.log(results);
         if (results.rowCount > 0) 
         {
