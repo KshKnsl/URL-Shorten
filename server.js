@@ -19,40 +19,40 @@ app.get('/', (req, res) =>
 
 const randomString = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890@#$%^&*()_"
 
-// function generateShortLink() 
-// {
-//     let shortLink = '';
-//     for (let i = 0; i < 3; i++) 
-//     {
-//         const randomIndex = Math.floor(Math.random() * randomString.length);
-//         shortLink += randomString[randomIndex];
-//     }
-//     connection.query(`SELECT url FROM URLTABLE WHERE shortLink = '${shortLink}'`, function (err, results, fields) {
-//         if (results.length <= 0)    return generateShortLink();
-//     });
-//     return shortLink;    
-// }
-// app.post('/shorten', (req, res) => 
-// {
-//     url  = req.body.url;
-//     if(!url || url.trim() =='')            res.redirect('/');
-//     connection.query(`SELECT shortLink FROM URLTABLE WHERE url = '${url}'`, function (err, results, fields) 
-//     {
-//         if(results.length > 0) 
-//         {
-//             link = results[0].shortLink;
-//             link = req.headers.origin + '/' + link;
-//             res.redirect('/');
-//         }
-//         else
-//         {
-//             link = generateShortLink();
-//             connection.query(`INSERT INTO URLTABLE (url, shortLink) VALUES ('${url}', '${link}')`);
-//             link = req.headers.origin + '/' + link;
-//             res.redirect('/');
-//         }
-//     });
-// });
+function generateShortLink() 
+{
+    let shortLink = '';
+    for (let i = 0; i < 3; i++) 
+    {
+        const randomIndex = Math.floor(Math.random() * randomString.length);
+        shortLink += randomString[randomIndex];
+    }
+    connection.query(`SELECT url FROM URLTABLE WHERE shortLink = '${shortLink}'`, function (err, results, fields) {
+        if (results.length <= 0)    return generateShortLink();
+    });
+    return shortLink;    
+}
+app.post('/shorten', (req, res) => 
+{
+    url  = req.body.url;
+    if(!url || url.trim() =='')            res.redirect('/');
+    connection.query(`SELECT shortLink FROM URLTABLE WHERE url = '${url}'`, function (err, results, fields) 
+    {
+        if(results.length > 0) 
+        {
+            link = results[0].shortLink;
+            link = req.headers.origin + '/' + link;
+            res.redirect('/');
+        }
+        else
+        {
+            link = generateShortLink();
+            connection.query(`INSERT INTO URLTABLE (url, shortLink) VALUES ('${url}', '${link}')`);
+            link = req.headers.origin + '/' + link;
+            res.redirect('/');
+        }
+    });
+});
 
 // app.get('/:s', (req, res) => 
 // {
