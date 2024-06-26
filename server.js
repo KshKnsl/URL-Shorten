@@ -37,7 +37,7 @@ app.post('/shorten', (req, res) =>
     if(!url || url.trim() =='')            res.redirect('/');
     connection.query(`SELECT shortLink FROM URLTABLE WHERE url = $1`, [url], function (err, results, fields) 
     {
-        console.log(results);
+        console.log(results.rows[0]);
         if(results.rowCount > 0) 
         {
             console.log(results.rows[0].shortLink+"I am here in shorten if condition");
