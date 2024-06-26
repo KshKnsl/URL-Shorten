@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free URL SHORTENER</title>
+    <link rel="stylesheet" href="./output.css">
+</head>
+<body class="bg-slate-900 p-10 overflow-hidden">
+    <h1 class="text-3xl text-white text-center tracking-tighter mb-3">Free URL SHORTENER</h1>
+    <p class="text-gray-600 text-center mb-5 ">This is a free tool to shorten URLs and generate short links URL shortener allows to create a shortened link making it easy to share</p>
+    <hr>
+    <form action="/shorten" method="post" class="bg-slate-800 mt-6 p-5 rounded-xl">
+        <input  class="w-full h-10 p-3 rounded-lg mb-5" type="url" name="url" placeholder="Enter the your to be shortened" value="<%= url %>">
+        <button class="w-full h-10 p-3 rounded-lg bg-yellow-500 hover:bg-yellow-400 flex justify-center items-center" type="submit">Shorten URL</button>
+    </form>
+
+    <br>
+    <div class="shortened-url text-white text-2xl flex gap-4 items-center justify-center">
+        <h2 class="text-nowrap">Shortened URL 👉</h2>
+        <div class="bg-slate-400 w-full py-2 px-4 rounded-lg flex items-center justify-between">
+            <div id="copyme"><%= link ? link : '' %></div>
+            <div class="buttons flex justify-center items-center gap-4">
+                <button id="CopyBTN" class="bg-blue-500 rounded-lg px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-700"><img src="./copy.svg" alt="" width="25">Copy</button>
+                <button class="bg-blue-500 rounded-lg px-2 py-1 flex justify-center items-center gap-2 hover:bg-blue-700" onclick="shareFunction()" id="share"><img src="./share.svg" alt="" width="25">Share</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="absolute bottom-2 left-1/2" id="success">
+        <div class=" bg-purple-900 rounded-lg p-4 text-white text-center">
+            Copied Successfully!
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>
