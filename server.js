@@ -40,12 +40,14 @@ app.post('/shorten', (req, res) =>
         console.log(results);
         if(results.rowCount > 0) 
         {
+            console.log(results.rows[0].shortLink+"I am here in shorten if condition");
             link = results.rows[0].shortLink;
             link = req.headers.origin + '/' + link;
             res.redirect('/');
         }
         else
         {
+            console.log("I am here in shorten else condition");
             link = generateShortLink();
             connection.query(`INSERT INTO URLTABLE (url, shortLink) VALUES ($1, $2)`, [url, link]);
             link = req.headers.origin + '/' + link;
