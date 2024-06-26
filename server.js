@@ -48,7 +48,12 @@ app.post('/shorten', (req, res) =>
         {
             console.log("I am here in shorten else condition");
             link = generateshortlink();
-            connection.query(`INSERT INTO URLTABLE (url, shortlink) VALUES ($1, $2)`, [url, link]);
+            connection.query(`INSERT INTO URLTABLE (url, shortlink) VALUES ($1, $2)`, [url, link], function (err, results)
+            {
+                console.log("I am here inside else condition");
+                console.log("Error:"+err);
+                console.log("RESULTS:"+results);
+            });
             link = req.headers.origin + '/' + link;
             res.redirect('/');
         }
