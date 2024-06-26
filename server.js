@@ -64,7 +64,6 @@ app.get('/:s', (req, res) =>
 {
     const shortlink = req.params.s;
     connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [shortlink], function (err, results, fields) {
-        console.log(results);
         if (results.rowCount > 0) 
         {
             const url = results.rows[0].url;
