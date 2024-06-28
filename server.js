@@ -17,7 +17,7 @@ app.get('/', (req, res) =>
     res.render('index.ejs', {link: link, url: url});
 });
 
-const randomString = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890@#$%^&*()_"
+const randomString = "1234567890@$%^&*()_qwertyuiopasdfghjklzxcvbnm-!`~<>}{[]';:"
 
 function generateshortlink() 
 {
