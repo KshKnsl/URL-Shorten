@@ -12,8 +12,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-let link="", url = "" , qrurl = "";    
-
 async function qrgererator(shortlink)
 {     
     const data = {
@@ -38,6 +36,10 @@ async function qrgererator(shortlink)
 
 app.get('/', async (req, res) => 
 {
+    let { link, url} = req.query;
+    console.log(link,url);
+
+    let qrurl = "";
     if(link != "")  qrurl = await qrgererator(link);
     res.render('index.ejs', {link: link, url: url, qrurl: qrurl});
 });
@@ -58,15 +60,16 @@ function generateshortlink()
 }
 app.post('/shorten', (req, res) => 
 {
-    url  = req.body.url;
-    if(!url || url.trim() =='')            res.redirect('/');
+    let url  = req.body.url;
+    let link="";
+    if(!url || url.trim() =='')    res.redirect(`/?link=${encodeURIComponent(link)}&url=${encodeURIComponent(url)}`);
     connection.query(`SELECT shortlink FROM URLTABLE WHERE url = $1`, [url], function (err, results) 
     {
         if(results.rowCount > 0) 
         {
             link = results.rows[0].shortlink;
             link = req.headers.origin + '/' + link;
-            res.redirect('/');
+            res.redirect(`/?link=${encodeURIComponent(link)}&url=${encodeURIComponent(url)}`);
         }
         else
         {
@@ -79,7 +82,7 @@ app.post('/shorten', (req, res) =>
                     return;
                 }
                 link = req.headers.origin + '/' + link;
-                res.redirect('/');
+                res.redirect(`/?link=${encodeURIComponent(link)}&url=${encodeURIComponent(url)}`);
             });
         }
     });
@@ -87,7 +90,7 @@ app.post('/shorten', (req, res) =>
 
 app.get('/:s', (req, res) => 
 {
-    const shortlink = req.params.s;
+    let shortlink = req.params.s;
     connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [shortlink], function (err, results, fields) {
         if (results.rowCount > 0) 
         {
