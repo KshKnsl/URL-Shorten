@@ -36,7 +36,7 @@ async function qrgererator(shortlink)
 
 app.get('/', async (req, res) => 
 {
-    let { link, url} = req.query;
+    let {link, url} = req.query;
     console.log(link,url);
 
     let qrurl = "";
@@ -98,6 +98,27 @@ app.get('/:s', (req, res) =>
             res.redirect(url);
         } 
         else  res.sendStatus(404);
+    });
+});
+
+app.post('/curtomurl', async (req, res) => 
+{
+    let link = req.body.link;
+    let url = req.body.url;
+    connection.query(`SELECT url FROM URLTABLE WHERE shortlink = $1`, [link], function (err, results, fields) 
+    {
+        if (results.rowCount <= 0)
+        {    
+            const insertQuery = `INSERT INTO urltable (url, shortlink) VALUES ($1, $2)`;
+            const values = [url, link];
+            connection.query(insertQuery, values, function (err, results) {
+                if (err) {  res.status(500).send('Database query failed'); return; }
+            });
+            link = req.headers.origin + '/' + link;
+            console.log(link,url,"redirecting");
+            res.send(`/?link=${encodeURIComponent(link)}&url=${encodeURIComponent(url)}`);
+        }
+        else    res.send('false');
     });
 });
 

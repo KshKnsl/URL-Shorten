@@ -9,31 +9,40 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 p-10 overflow-x-hidden">
-    <h1 class="text-3xl text-white text-center tracking-tighter mb-3">Free URL SHORTENER</h1>
+    <h1 class="text-3xl text-white text-center tracking-tighter mb-3 font-bold">Free URL SHORTENER</h1>
     <p class="text-gray-600 text-center mb-5 ">This is a free tool to shorten URLs and generate short links URL shortener allows to create a shortened link making it easy to share</p>
     <hr>
     <form action="/shorten" method="post" class="bg-slate-800 mt-6 p-5 rounded-xl">
-        <input  class="w-full h-10 p-3 rounded-lg mb-5" type="url" name="url" placeholder="Enter the your to be shortened" value="<%= url %>">
-        <button class="w-full h-10 p-3 rounded-lg bg-yellow-500 hover:bg-yellow-400 flex justify-center items-center" type="submit">Shorten URL</button>
+        <input id="urlinput"  class="w-full h-10 p-3 border-black border-b-2 border-r-2 rounded-lg mb-5" type="url" name="url" placeholder="Enter the your to be shortened" value="<%= url %>">
+        <button class="w-full h-10 p-3 border-black border-b-2 border-r-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 flex justify-center items-center" type="submit">Shorten URL</button>
     </form>
 
     <br>
     <div class="shortened-url text-white text-2xl lg:flex items-center justify-center">
         <h2 class="text-nowrap">Shortened URL 👉 &nbsp;</h2>
         <div class="lg:bg-[#D9E6FA] w-full py-2 px-4 rounded-lg lg:flex items-center justify-between lg:border lg:border-black lg:border-b-4 lg:border-r-4 border-opacity-100">
-            <div id="copyme" class="lg:bg-transparent bg-[#D9E6FA] px-3 rounded-lg py-1 min-h-12 lg:mb-0 mb-5 font-bold border border-black border-b-4 border-r-4 text-black lg:border-none"><%= link ? link : '' %></div>
-            <div class="buttons flex lg:justify-center items-center gap-4 flex-wrap">
-                <button id="CopyBTN" class="bg-[#0056D2] btns tracking-tight rounded-lg px-2 py-1 flex justify-center text-nowrap items-center gap-2 hover:bg-blue-700"><img src="./copy.svg" alt="" width="25">Copy</button>
-                <button class="bg-[#0056D2] rounded-lg btns tracking-tight px-2 py-1 flex justify-center items-center text-nowrap gap-2 hover:bg-blue-700" id="share"><img src="./share.svg" alt="" width="25">Share</button>
-                <button class="bg-[#0056D2] rounded-lg btns tracking-tight px-2 py-1 flex justify-center items-center text-nowrap gap-2 hover:bg-blue-700" id="qrbtn"><img src="./qrbtn.svg" alt="" width="25">QR Code</button>
+            <div id="copyme" class="lg:bg-transparent bg-[#D9E6FA] px-3 rounded-lg py-1 min-h-12 lg:mb-0 mb-5 font-bold border border-black border-b-4 border-r-4 text-black lg:border-none break-all"><%= link ? link : '' %></div>
+            <div class="buttons flex lg:justify-center items-center gap-3 flex-wrap">
+                <button id="CopyBTN" class="bg-[#0056D2] btns text-lg tracking-tight rounded-lg px-2 py-2 flex justify-center border-black border-b-4 border-r-4 text-nowrap items-center gap-2 hover:bg-blue-700"><img src="./copy.svg" alt="" width="25">Copy</button>
+                <button class="bg-[#0056D2] rounded-lg btns tracking-tight text-lg px-2 py-2 flex justify-center items-center border-black border-b-4 border-r-4 text-nowrap gap-2 hover:bg-blue-700" id="share"><img src="./share.svg" alt="" width="25">Share</button>
+                <button class="bg-[#0056D2] rounded-lg btns tracking-tight text-lg px-2 py-2 flex justify-center items-center border-black border-b-4 border-r-4 text-nowrap gap-2 hover:bg-blue-700" id="qrbtn"><img src="./qrbtn.svg" alt="" width="25">QR Code</button>
+                <button class="bg-[#0056D2] rounded-lg btns tracking-tight text-lg px-2 py-2 border-black border-b-4 border-r-4 justify-center items-center text-nowrap gap-2 hover:bg-blue-700 flex" id="customqr"><img src="./pencil.svg" alt="" width="25">CustomQR</button>                
             </div>
         </div>
     </div>
-    <img src="<%= qrurl ? qrurl : '' %>" alt="" id="qrimage" class="w-60 h-60 object-contain bg-white bg-opacity-5 absolute left-1/2 mt-16 -translate-x-1/2 rounded-lg p-3 hidden">
+
+    <div class="bg-slate-800 mt-6 p-5 rounded-xl hidden" id="customqrform">
+        <input id="input" class="w-full h-10 p-3 border-black border-b-2 border-r-2 rounded-lg mb-5" type="text" placeholder="Enter the custom name">
+        <button class="w-full p-3 border-black border-b-2 border-r-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 flex justify-center items-center" onclick="fetchCustomURL()">Check Avaliability and link if avaliable</button>
+        <div id="avaliable" class="subtext flex mt-2 text-white"><img src="./avaliable.svg" alt="" width="20">&nbsp;This url is avaliable and has been linked successfully</div>
+        <div id="notavaliable" class="subtext flex mt-2 text-white"><img src="./error.svg" alt="" width="20">&nbsp;This url is not avaliable try something different</div>
+    </div>
     
-    <div class="div w-full h-20"></div>
-    <div class="absolute bottom-2 left-1/2" id="success">
-        <div class=" bg-purple-900 rounded-lg p-4 text-white text-center">
+    <div class="flex items-center justify-center">
+        <img src="<%= qrurl ? qrurl : '' %>" alt="" id="qrimage" class="w-60 h-60 object-contain bg-white bg-opacity-5 mt-16 mb-16 rounded-lg p-3 hiden border-black border-b-4 border-r-4">
+    </div>
+    <div class="absolute bottom-2 left-1/2 -translate-x-1/2" id="success">
+        <div class=" bg-purple-900 rounded-lg p-4 text-white text-center border-black border-b-4 border-r-4">
             Copied Successfully!
         </div>
     </div>

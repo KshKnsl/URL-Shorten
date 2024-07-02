@@ -22,3 +22,27 @@
         transform: translateY(0px);
     }
 }
+#avaliable
+{
+    display: none;
+    animation-name: down;
+    animation-duration: 2s;
+    opacity: 1;
+}
+#notavaliable
+{
+    display: none;
+    animation-name: down;
+    animation-duration: 2s;
+    opacity: 1;
+}
+@keyframes down {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
