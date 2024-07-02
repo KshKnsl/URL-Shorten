@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const path= require('path');
 const connection = require('./sql-config.js');
@@ -11,13 +12,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-let link="", url = "";    
-app.get('/', (req, res) => 
+let link="", url = "" , qrurl = "";    
+
+async function qrgererator(shortlink)
+{     
+    const data = {
+        workspace: '132e744b-fb1c-4d27-bc70-4924c70aca4f',
+        qr_data: `${shortlink}`,
+        primary_color: '#ffffff',
+        pattern: 'Circles',
+        eye_style: 'Rounded',
+        generate_png: true,
+        frame: 'polkadot'
+    };
+    try 
+    {
+        const response = await axios.post('https://hovercode.com/api/v2/hovercode/create/', data, {
+            headers: {     Authorization: 'Token 346e459b59eda1308adad94a7809b3beec72313b'        },
+            timeout: 10000
+        });
+        return response.data.png;
+    } 
+    catch (error) {      console.error("Qr not generated");    }
+}
+
+app.get('/', async (req, res) => 
 {
-    res.render('index.ejs', {link: link, url: url});
+    if(link != "")  qrurl = await qrgererator(link);
+    res.render('index.ejs', {link: link, url: url, qrurl: qrurl});
 });
 
-const randomString = "1234567890@$%^&*()_qwertyuiopasdfghjklzxcvbnm-!`~<>}{[]';:"
+const randomString = "1234567890@^&_qwertyuiopasdfghjklzxcvbnm";
 
 function generateshortlink() 
 {
