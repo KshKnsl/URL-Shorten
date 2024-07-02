@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free URL SHORTENER</title>
-    <link rel="stylesheet" href="./input.css">
+    <link rel="stylesheet" href="./output.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -21,7 +21,7 @@
     <div class="shortened-url text-white text-2xl lg:flex items-center justify-center">
         <h2 class="text-nowrap">Shortened URL 👉 &nbsp;</h2>
         <div class="lg:bg-[#D9E6FA] w-full py-2 px-4 rounded-lg lg:flex items-center justify-between lg:border lg:border-black lg:border-b-4 lg:border-r-4 border-opacity-100">
-            <div id="copyme" class="lg:bg-transparent bg-[#D9E6FA] px-3 rounded-lg py-1 min-h-12 lg:mb-0 mb-5 font-bold border border-black border-b-4 border-r-4 text-black"><%= link ? link : '' %></div>
+            <div id="copyme" class="lg:bg-transparent bg-[#D9E6FA] px-3 rounded-lg py-1 min-h-12 lg:mb-0 mb-5 font-bold border border-black border-b-4 border-r-4 text-black lg:border-none"><%= link ? link : '' %></div>
             <div class="buttons flex lg:justify-center items-center gap-4 flex-wrap">
                 <button id="CopyBTN" class="bg-[#0056D2] btns tracking-tight rounded-lg px-2 py-1 flex justify-center text-nowrap items-center gap-2 hover:bg-blue-700"><img src="./copy.svg" alt="" width="25">Copy</button>
                 <button class="bg-[#0056D2] rounded-lg btns tracking-tight px-2 py-1 flex justify-center items-center text-nowrap gap-2 hover:bg-blue-700" id="share"><img src="./share.svg" alt="" width="25">Share</button>

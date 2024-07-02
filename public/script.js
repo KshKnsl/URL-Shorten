@@ -12,7 +12,6 @@ function myFunction()
 document.querySelector('#share').addEventListener("click", async () => 
 {
     navigator.vibrate(100);
-    console.log("Share Button Clicked");
     var copyText = document.getElementById("copyme");
     let shareData = { title: "Shortened URL",
     text: copyText.textContent,
@@ -50,6 +49,7 @@ if (textContent.length == 0) {
 });
 }
 else{
+    copymeInput.classList.remove('lg:border-none');
     btns.forEach(btn => {
     btn.disabled = false;
 });
