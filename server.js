@@ -28,7 +28,7 @@ async function qrgererator(shortlink)
     try 
     {
         const response = await axios.post('https://hovercode.com/api/v2/hovercode/create/', data, {
-            headers: {     Authorization: 'Token 346e459b59eda1308adad94a7809b3beec72313b'        },
+            headers: {     Authorization: `Token ${process.env.API_KEY}`        },
             timeout: 10000
         });
         return response.data.png;
