@@ -37,7 +37,7 @@ async function qrgererator(shortlink)
 app.get('/', async (req, res) => 
 {
     let {link, url} = req.query;
-    console.log(link,url);
+    // console.log(link,url);
 
     let qrurl = "";
     if(link != "")  qrurl = await qrgererator(link);
@@ -115,7 +115,7 @@ app.post('/curtomurl', async (req, res) =>
                 if (err) {  res.status(500).send('Database query failed'); return; }
             });
             link = req.headers.origin + '/' + link;
-            console.log(link,url,"redirecting");
+            // console.log(link,url,"redirecting");
             res.send(`/?link=${encodeURIComponent(link)}&url=${encodeURIComponent(url)}`);
         }
         else    res.send('false');
