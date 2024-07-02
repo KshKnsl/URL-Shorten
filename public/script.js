@@ -36,7 +36,7 @@ copybtn.addEventListener('click', () => {
 document.querySelector('#qrbtn').addEventListener("click", async () => 
 {
     navigator.vibrate(100);
-    document.getElementById("qrimage").classList.toggle("hidden");
+    document.getElementById("qrimage").classList.remove("hidden");
 });
 
 const copymeInput = document.getElementById("copyme");
