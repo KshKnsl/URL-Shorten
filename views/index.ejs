@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="./input.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -17,13 +17,33 @@
                         secondary: {"50":"#fdf4ff","100":"#fae8ff","200":"#f5d0fe","300":"#f0abfc","400":"#e879f9","500":"#d946ef","600":"#c026d3","700":"#a21caf","800":"#86198f","900":"#701a75"}
                     },
                     animation: {
+                        'gradient': 'gradient 8s linear infinite',
                         'float': 'float 3s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'bounce-gentle': 'bounceGentle 2s infinite'
                     },
                     keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(-2px)' },
+                            '50%': { transform: 'translateY(2px)' }
                         }
                     }
                 }
@@ -31,82 +51,126 @@
         }
     </script>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-primary-900 to-secondary-900 p-6 md:p-10 overflow-x-hidden min-h-screen text-white flex flex-col">
-    <div class="max-w-4xl mx-auto flex-grow">
-        <h1 class="text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-primary-300 to-secondary-300 text-center tracking-tight mb-4 font-bold animate-float">Free URL SHORTENER</h1>
-        <p class="text-gray-300 text-center mb-8 max-w-2xl mx-auto animate-pulse-slow">This is a free tool to shorten URLs and generate short links. URL shortener allows you to create a shortened link making it easy to share</p>
-        <hr class="border-gray-700 mb-8">
-        
-        <form action="/shorten" method="post" class="bg-gray-800/50 backdrop-blur-md mt-6 p-8 rounded-3xl shadow-2xl transition-all duration-300 hover:shadow-primary-500/20 border border-gray-700">
-            <input id="urlinput" class="w-full h-14 p-4 bg-gray-700 border-2 border-gray-600 rounded-xl mb-6 focus:outline-none focus:border-primary-500 transition-all duration-300 text-white placeholder-gray-400" type="url" name="url" placeholder="Enter the URL to be shortened" value="<%= url %>">
-            <button class="w-full h-14 p-3 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-bold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 shadow-md hover:shadow-lg flex justify-center items-center" type="submit">Shorten URL</button>
-        </form>
+<body class="dark:bg-gradient-to-br dark:from-[#0a192f] dark:via-[#112240] dark:to-[#1a365d] bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-10 overflow-x-hidden min-h-screen text-gray-800 dark:text-white flex flex-col transition-colors duration-500">
+    <!-- Theme Toggle Button -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="theme-toggle" class="p-2 rounded-full bg-white dark:bg-[#1b2b44] shadow-lg hover:shadow-xl transition-all duration-300 group animate-bounce-gentle">
+            <!-- Sun Icon -->
+            <svg class="w-6 h-6 text-yellow-500 dark:text-gray-400 hidden dark:block transition-transform duration-500 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <!-- Moon Icon -->
+            <svg class="w-6 h-6 text-indigo-600 dark:text-gray-400 block dark:hidden transition-transform duration-500 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </div>
 
-        <div class="shortened-url mt-12">
-            <div class="bg-gray-800/50 backdrop-blur-md p-6 rounded-3xl border border-gray-700 shadow-2xl transition-all duration-300 hover:shadow-secondary-500/20">
-                <div class="flex flex-col lg:flex-row items-center gap-4">
-                    <h2 class="text-xl text-primary-300 font-semibold whitespace-nowrap">Shortened URL 👉</h2>
-                    <div class="w-full">
-                        <div id="copyme" class="bg-gray-700/50 px-4 py-3 rounded-xl font-mono text-sm break-all text-primary-300 cursor-pointer mb-4 lg:mb-0"><%= link ? link : '' %></div>
+    <div class="max-w-3xl mx-auto w-full flex-grow">
+        <div class="animate-slide-up">
+            <h1 class="text-4xl md:text-6xl bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-300 dark:to-purple-400 text-transparent bg-clip-text text-center tracking-tight mb-4 font-bold animate-gradient">Free URL SHORTENER</h1>
+            <p class="text-gray-600 dark:text-gray-300 text-center mb-12 max-w-2xl mx-auto text-sm md:text-base animate-float">This is a free tool to shorten URLs and generate short links. URL shortener allows you to create a shortened link making it easy to share</p>
+        </div>
+        
+        <!-- Main Input Form -->
+        <div class="bg-white/80 dark:bg-[#1b2b44] dark:bg-opacity-50 backdrop-blur-lg rounded-2xl p-6 shadow-xl mb-8 transition-all duration-500 hover:shadow-2xl animate-slide-up">
+            <input id="urlinput" 
+                   class="w-full h-14 px-4 bg-gray-100 dark:bg-[#0d1829] rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" 
+                   type="url" 
+                   name="url" 
+                   placeholder="Enter the URL to be shortened" 
+                   value="<%= url %>">
+            <button class="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium transition-all duration-300 transform hover:scale-[1.02] focus:outline-none animate-pulse">
+                Shorten URL
+            </button>
+        </div>
+
+        <!-- Shortened URL Result -->
+        <div class="bg-white/80 dark:bg-[#1b2b44] dark:bg-opacity-50 backdrop-blur-lg rounded-2xl p-6 shadow-xl transition-all duration-500 hover:shadow-2xl animate-slide-up">
+            <div class="flex items-center gap-2 mb-4">
+                <h2 class="text-blue-600 dark:text-blue-300 font-medium animate-float">Shortened URL</h2>
+                <span class="text-xl animate-bounce-gentle">👉</span>
+            </div>
+            
+            <div class="bg-gray-100 dark:bg-[#0d1829] rounded-xl p-4 mb-6 group hover:shadow-inner transition-all duration-300">
+                <code id="copyme" class="text-blue-700 dark:text-blue-300 text-sm break-all transition-colors duration-300"><%= link ? link : '' %></code>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button class="action-btn group">
+                    <div class="w-full h-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="group-hover:text-blue-400 transition-colors duration-300">Copy</span>
                     </div>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-                    <button id="CopyBTN" class="action-btn">
-                        <img src="./copy.svg" alt="" width="20" class="mr-2">Copy
-                    </button>
-                    <button id="share" class="action-btn">
-                        <img src="./share.svg" alt="" width="20" class="mr-2">Share
-                    </button>
-                    <button id="qrbtn" class="action-btn">
-                        <img src="./qrbtn.svg" alt="" width="20" class="mr-2">QR Code
-                    </button>
-                    <button id="customqr" class="action-btn">
-                        <img src="./pencil.svg" alt="" width="20" class="mr-2">CustomQR
-                    </button>
-                </div>
+                </button>
+
+                <button class="action-btn group">
+                    <div class="w-full h-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                        </svg>
+                        <span class="group-hover:text-blue-400 transition-colors duration-300">Share</span>
+                    </div>
+                </button>
+
+                <button class="action-btn group">
+                    <div class="w-full h-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                        </svg>
+                        <span class="group-hover:text-blue-400 transition-colors duration-300">QR Code</span>
+                    </div>
+                </button>
+
+                <button class="action-btn group">
+                    <div class="w-full h-full flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                        <span class="group-hover:text-blue-400 transition-colors duration-300">CustomQR</span>
+                    </div>
+                </button>
             </div>
         </div>
 
-        <div id="customqrform" class="bg-gray-800/50 backdrop-blur-md mt-12 p-8 rounded-3xl shadow-2xl transition-all duration-300 hover:shadow-green-500/20 hidden border border-gray-700">
-            <input id="input" class="w-full h-14 p-4 bg-gray-700 border-2 border-gray-600 rounded-xl mb-6 focus:outline-none focus:border-green-500 transition-all duration-300 text-white placeholder-gray-400" type="text" placeholder="Enter the custom name">
-            <button class="w-full p-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-md hover:shadow-lg flex justify-center items-center h-14" onclick="fetchCustomURL()">Check Availability and link if available</button>
-            <div id="avaliable" class="subtext flex mt-4 text-green-400 items-center hidden"><img src="./avaliable.svg" alt="" width="20" class="mr-2">This URL is available and has been linked successfully</div>
-            <div id="notavaliable" class="subtext flex mt-4 text-red-400 items-center hidden"><img src="./error.svg" alt="" width="20" class="mr-2">This URL is not available, try something different</div>
-        </div>
-        
+        <!-- QR Code Display -->
         <div class="flex items-center justify-center">
-            <img src="<%= qrurl ? qrurl : '' %>" alt="" id="qrimage" class="w-64 h-64 object-contain bg-white bg-opacity-10 mt-16 mb-16 rounded-3xl p-4 hidden border-4 border-primary-500 shadow-2xl transition-all duration-300 hover:shadow-xl animate-float">
+            <img src="<%= qrurl ? qrurl : '' %>" alt="" id="qrimage" class="w-64 h-64 object-contain bg-white bg-opacity-10 mt-8 rounded-2xl p-4 hidden animate-float shadow-2xl">
         </div>
     </div>
 
-    <footer class="mt-auto py-8 text-center">
-        <div class="flex items-center justify-center gap-2 text-gray-400 hover:text-primary-300 transition-colors duration-300">
+    <!-- Footer -->
+    <footer class="mt-12 text-center pb-6 animate-slide-up">
+        <div class="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400">
             <span>Made with</span>
             <svg class="w-5 h-5 text-red-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
             </svg>
             <span>by</span>
-            <a href="https://github.com/kushkansal" target="_blank" class="font-medium hover:underline">Kush Kansal</a>
+            <a href="https://github.com/kushkansal" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-300">Kush Kansal</a>
         </div>
     </footer>
 
+    <!-- Success Toast -->
     <div id="success" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 transition-all duration-300 opacity-0 translate-y-full hidden">
-        <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-4 text-white text-center shadow-lg border border-green-400">
+        <div class="bg-green-500 rounded-xl px-6 py-3 text-white text-center shadow-lg animate-bounce-gentle">
             Copied Successfully!
         </div>
     </div>
 
     <style>
         .action-btn {
-            @apply bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white text-sm font-semibold rounded-xl px-4 py-3 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 shadow-md hover:shadow-lg flex items-center justify-center w-full;
+            @apply bg-gray-100 dark:bg-[#0d1829] hover:bg-gray-200 dark:hover:bg-[#162236] text-gray-700 dark:text-gray-300 text-sm font-medium rounded-xl py-3 transition-all duration-300 border border-gray-200 dark:border-gray-700/50 hover:shadow-md;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-    </style>
-    <script src="./script.js"></script>
-</body>
-</html>
+        ::-webkit-scrollbar-track {
+            background: theme('colors.gray.100');
+            @apply dark:bg-[#0
