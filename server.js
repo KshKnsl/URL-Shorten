@@ -80,8 +80,8 @@ app.post('/api/shorten', async (req, res) => {
 
         if (results.rowCount > 0) {
             const shortlink = results.rows[0].shortlink;
-            const fullShortlink = `${req.headers.origin}/${shortlink}`;
-            const qrurl = await qrgererator(fullShortlink);
+            const fullShortlink = `https://tinyu.vercel.app/${shortlink}`;
+            const qrurl = await qrgererator(url);
 
             return res.json({ shortlink: fullShortlink, qrurl });
         } else {
@@ -96,7 +96,7 @@ app.post('/api/shorten', async (req, res) => {
                     }
 
                     const fullShortlink = `https://tinyu.vercel.app/${shortlink}`;
-                    const qrurl = await qrgererator(fullShortlink);
+                    const qrurl = await qrgererator(url);
 
                     return res.json({ shortlink: fullShortlink, qrurl });
                 });
