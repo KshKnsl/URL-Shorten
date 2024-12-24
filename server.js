@@ -6,7 +6,13 @@ const path = require('path');
 const connection = require('./sql-config.js');
 const env = require('dotenv').config();
 
-app.use(cors()); // Enable CORS for all requests
+const corsOptions = {
+    origin: '*', // Allow all origins. Change this to specific origins if needed for security.
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+};
+app.use(cors(corsOptions));
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
