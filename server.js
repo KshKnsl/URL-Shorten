@@ -95,7 +95,7 @@ app.post('/api/shorten', async (req, res) => {
                         return res.status(500).json({ error: 'Database query failed' });
                     }
 
-                    const fullShortlink = `${req.headers.origin}/${shortlink}`;
+                    const fullShortlink = `https://tinyu.vercel.app/${shortlink}`;
                     const qrurl = await qrgererator(fullShortlink);
 
                     return res.json({ shortlink: fullShortlink, qrurl });
