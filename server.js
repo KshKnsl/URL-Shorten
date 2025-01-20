@@ -55,7 +55,7 @@ const randomString = "1234567890@^&_qwertyuiopasdfghjklzxcvbnm";
 
 function generateshortlink(callback) {
     let shortlink = '';
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
         const randomIndex = Math.floor(Math.random() * randomString.length);
         shortlink += randomString[randomIndex];
     }
