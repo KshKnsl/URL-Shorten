@@ -11,8 +11,45 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
-const fs = require('fs');
-const urlTxtPath = path.join(__dirname, 'url.txt');
+const pool = require('./sql-config.js');
+const ensureTable = async () => {
+    await pool.query(`CREATE TABLE IF NOT EXISTS urlstore (
+        id SERIAL PRIMARY KEY,
+        url TEXT NOT NULL
+    );`);
+};
+ensureTable();
+
+// Save or update the URL (always keep only one row)
+app.post('/get-url', async (req, res) => {
+    const { url } = req.body;
+    if (!url || typeof url !== 'string' || url.trim() === '') {
+        return res.status(400).json({ error: 'Invalid URL' });
+    }
+    try {
+        // Upsert: if exists, update; else insert
+        await ensureTable();
+        await pool.query(`INSERT INTO urlstore (id, url) VALUES (1, $1)
+            ON CONFLICT (id) DO UPDATE SET url = EXCLUDED.url;`, [url]);
+        res.json({ message: 'URL saved successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to save URL', details: err.message });
+    }
+});
+
+// Return the stored URL
+app.get('/give-url', async (req, res) => {
+    try {
+        await ensureTable();
+        const result = await pool.query('SELECT url FROM urlstore WHERE id = 1');
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'No URL found' });
+        }
+        res.json({ url: result.rows[0].url });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch URL', details: err.message });
+    }
+});
 
 app.use(cors(corsOptions));
 
@@ -146,29 +183,6 @@ app.post('/customurl', (req, res) => {
             const fullShortlink = `${req.headers.origin}/${link}`;
             res.json({ shortlink: fullShortlink });
         });
-    });
-});
-
-app.post('/save-url', (req, res) => {
-    const { url } = req.body;
-    if (!url || typeof url !== 'string' || url.trim() === '') {
-        return res.status(400).json({ error: 'Invalid URL' });
-    }
-    fs.writeFile(urlTxtPath, url, 'utf8', (err) => {
-        if (err) {
-            return res.status(500).json({ error: 'Failed to save URL' });
-        }
-        res.json({ message: 'URL saved successfully' });
-    });
-});
-
-// Route to return the stored URL from url.txt
-app.get('/give-url', (req, res) => {
-    fs.readFile(urlTxtPath, 'utf8', (err, data) => {
-        if (err) {
-            return res.status(404).json({ error: 'No URL found' });
-        }
-        res.json({ url: data });
     });
 });
 
